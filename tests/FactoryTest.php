@@ -23,6 +23,8 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
     private $home;
     /** @var string $cacheDir */
     private $cacheDir;
+    /** @var string $projectDir */
+    private $projectDir;
 
     public function testCreateConfigUnixEnv()
     {
@@ -73,7 +75,7 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
         putenv("APPDATA=$this->home");
         putenv("LOCALAPPDATA=$this->home");
 
-        $config = Factory::createConfig();
+        $config = Factory::createHomeConfig();
 
         $this->assertEquals($home, $config->get('cache-dir'));
         $this->assertEquals($home, $config->get('home'));
@@ -81,5 +83,14 @@ class FactoryTest extends \PHPUnit_Framework_TestCase
 
         $process = new Process("rm -rf $this->home");
         $process->run();
+    }
+
+    /**
+     * @test
+     * @group now
+     */
+    public function createProjectConfigUnixEnv()
+    {
+        $this->assertEquals('', exec('git rev-parse --show-toplevel'));
     }
 }

@@ -71,7 +71,7 @@ EOF
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->config = Factory::createHomeConfig();
-        $this->config = array_merge($this->config, Factory::createProjectConfig());
+        $this->config = $this->config->merge(Factory::createProjectConfig());
     }
 
     /**
@@ -97,7 +97,10 @@ EOF
         // we should not dump contents into a single file
         // but split them accordingly
 
-        if (!@file_put_contents($filename, $yaml->dump($content), 0644)) {
+        if (
+        ($input->getOption('global') && !@file_put_contents($homeFilename, $yaml->dump($content), 0644)) ||
+        !@file_put_contents($projectFilename, $yaml->dump($content), 0644)
+        ) {
             $output->writeln('<error>Configuration file cannot be saved.</error>');
         }
 

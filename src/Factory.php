@@ -22,7 +22,7 @@ class Factory
      * @throws \RuntimeException
      * @return Config
      */
-    public static function createConfig()
+    public static function createHomeConfig()
     {
         // determine home and cache dirs
         $home = getenv('GUSH_HOME');
@@ -75,5 +75,13 @@ class Factory
         $config->merge(['home' => $home, 'cache-dir' => $cacheDir]);
 
         return $config;
+    }
+
+    /**
+     * @throws \RuntimeException
+     */
+    public function createProjectConfig()
+    {
+
     }
 }

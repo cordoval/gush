@@ -270,7 +270,7 @@ LOGO;
         $this->dispatcher->dispatch(ConsoleEvents::COMMAND, $event);
 
         try {
-            $exitCode = $command->run($input, $output);
+            $command->run($input, $output);
         } catch (\Exception $e) {
             $event = new ConsoleExceptionEvent($command, $input, $output, $e, $e->getCode());
             $this->dispatcher->dispatch(ConsoleEvents::EXCEPTION, $event);
@@ -284,10 +284,8 @@ LOGO;
             } else {
                 throw $event->getException();
             }
-
-            $exitCode = $event->getExitCode();
         } finally {
-            $event = new ConsoleTerminateEvent($command, $input, $output, $exitCode);
+            $event = new ConsoleTerminateEvent($command, $input, $output, $event->getExitCode());
             $this->dispatcher->dispatch(ConsoleEvents::TERMINATE, $event);
         }
 
